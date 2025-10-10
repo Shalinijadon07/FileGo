@@ -17,7 +17,7 @@ export default function FileList() {
       try {
         setLoading(true);
         const data = await apiRequest("GET", "/api/files");
-        if (isMounted) setFiles(data || []);
+        if (isMounted) setFiles(Array.isArray(data) ? data : []);
       } catch (err) {
         toast.error(`Failed to load files: ${err.message}`);
       } finally {

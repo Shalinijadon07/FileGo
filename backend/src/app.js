@@ -25,7 +25,7 @@ app.use("/api/", require("./routes/user.File.Router"));
 
 app.use(errorHandler);
 
+connectDB();
 app.listen(process.env.PORT || 3000, () => {
-  connectDB();
   console.log("Server running on port 3000");
 });

@@ -3,7 +3,7 @@ import UploadZone from "@/components/upload-zone";
 import FileList from "@/components/file-list";
 import StatsOverview from "@/components/stats-overview";
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <div className="font-inter bg-gray-50 min-h-screen">
       <Header />

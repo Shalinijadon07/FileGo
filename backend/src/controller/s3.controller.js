@@ -111,7 +111,7 @@ const getStatsS3 = wrapAsync(async (req, res) => {
   do {
     const command = new ListObjectsV2Command({
       Bucket: process.env.AWS_BUCKET_NAME,
-      Prefix: `${userId}/`, // ✅ ensures only this user’s files are included
+      Prefix: `${userId}/`,
       ContinuationToken: continuationToken,
     });
     const response = await s3.send(command);

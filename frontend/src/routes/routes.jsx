@@ -1,56 +1,42 @@
 // Router.tsx
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
+import useAuth from "@/hooks/use-auth";
 
-import ProtectedLayout from "@/Layout/ProtectedLayout";
-import PublicLayout from "@/Layout/PublicLayout";
-
-import Home from "@/pages/home";
 import Landing from "@/pages/landing";
+import Dashboard from "@/pages/dashboard";
 import Auth from "@/pages/auth";
 import Download from "@/pages/download";
 import NotFound from "@/pages/not-found";
-import useAuth from "@/hooks/use-auth";
 
-function Router() {
-  const { isLoading, isAuthenticated } = useAuth();
+export default function Router() {
+  const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
+    // Skeleton loader while auth state is initializing
     return (
       <div className="flex items-center justify-center min-h-screen">
-        Loading...
+        <div className="animate-pulse h-6 bg-gray-200 rounded w-1/2 mx-auto" />
       </div>
     );
   }
 
   return (
     <Switch>
-      {/* Root → Landing if not logged in, Home if logged in */}
       <Route path="/">
-        {isAuthenticated ? (
-          <ProtectedLayout>
-            <Home />
-          </ProtectedLayout>
-        ) : (
-          <Landing />
-        )}
+        {isAuthenticated ? <Redirect to="/dashboard" /> : <Landing />}
       </Route>
 
-      {/* Auth page (blocked if logged in) */}
+      <Route path="/dashboard">
+        {isAuthenticated ? <Dashboard /> : <Redirect to="/auth" />}
+      </Route>
+
       <Route path="/auth">
-        <PublicLayout>
-          <Auth />
-        </PublicLayout>
+        {isAuthenticated ? <Redirect to="/dashboard" /> : <Auth />}
       </Route>
 
-      {/* Protected downloads */}
-      <Route path="/download/:id">
-        <Download />
-      </Route>
+      <Route path="/download/:id" component={Download} />
 
-      {/* Catch-all */}
       <Route component={NotFound} />
     </Switch>
   );
 }
-
-export default Router;

@@ -48,10 +48,10 @@ export default function Header() {
                     <ChevronDown size={14} className="text-gray-600" />
                   </Button>
                 </DropdownMenuTrigger>
+
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem onClick={logout}>
-                    <LogOut size={16} className="mr-2" />
-                    Sign Out
+                  <DropdownMenuItem onClick={logout} className="text-danger">
+                    <LogOut className="w-4 h-4 mr-2" /> Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

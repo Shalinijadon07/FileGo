@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLocation } from "wouter";
 
 export default function Landing() {
+  const [, setLocation] = useLocation();
   return (
     <div className="font-inter bg-gray-50 min-h-screen">
       <header className="bg-white border-b border-gray-200">
@@ -17,7 +19,7 @@ export default function Landing() {
             </div>
 
             <Button
-              onClick={() => (window.location.href = "/auth")}
+              onClick={() => setLocation("/auth")}
               className="bg-primary text-white px-4 sm:px-6 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors"
             >
               Sign In
@@ -37,7 +39,7 @@ export default function Landing() {
             reliable file sharing.
           </p>
           <Button
-            onClick={() => (window.location.href = "/auth")}
+            onClick={() => setLocation("/auth")}
             size="lg"
             className="w-full sm:w-auto px-8 py-4 text-lg"
           >
@@ -103,7 +105,7 @@ export default function Landing() {
               secure file sharing needs. Sign up now and get started instantly.
             </p>
             <Button
-              onClick={() => (window.location.href = "/auth")}
+              onClick={() => setLocation("/auth")}
               size="lg"
               className="w-full sm:w-auto px-8 py-4 text-lg"
             >

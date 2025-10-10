@@ -3,9 +3,18 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const cookieOptions = require("../config/cookie");
 const bcrypt = require("bcrypt");
+const { OAuth2Client } = require("google-auth-library");
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const login_user = wrapAsync(async (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ isAuth: false, error: "All fields are required" });
+  }
 
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
@@ -33,6 +42,12 @@ const login_user = wrapAsync(async (req, res) => {
 
 const register_user = wrapAsync(async (req, res) => {
   const { name, email, password, profilePic } = req.body;
+
+  if (!name || !email || !password) {
+    return res
+      .status(400)
+      .json({ isAuth: false, error: "All fields are required" });
+  }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -75,9 +90,45 @@ const get_user = wrapAsync(async (req, res) => {
   res.json({ isAuth: true, user: req.user });
 });
 
+const google_auth = async (req, res) => {
+  console.log({ req });
+  try {
+    const { credential } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        profilePic: picture,
+      });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.cookie("authToken", token, {
+      ...cookieOptions,
+      maxAge: 1000 * 60 * 60,
+    });
+    res.json({ isAuth: true, user });
+  } catch (error) {
+    console.error("Google login error:", error);
+    res.status(400).json({ isAuth: false, error: "Invalid Google token" });
+  }
+};
+
 module.exports = {
   login_user,
   logout_user,
   get_user,
   register_user,
+  google_auth,
 };

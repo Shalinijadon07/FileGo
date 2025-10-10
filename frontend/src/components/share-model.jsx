@@ -66,6 +66,7 @@ export default function ShareModal({ isOpen, onClose, uploadedFile }) {
             <Label htmlFor="shareLink">Share Link</Label>
             <div className="flex mt-2">
               <Input
+                autoFocus
                 id="shareLink"
                 type="text"
                 readOnly

@@ -202,14 +202,15 @@ export default function UploadZone() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="password" className="mb-2 block">
+                <Label htmlFor="fileKey" className="mb-2 block">
                   Password Protection
                 </Label>
                 <Input
-                  id="password"
+                  id="fileKey"
                   type="password"
                   placeholder="Optional password"
                   value={password}
+                  autoComplete="username"
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-white"
                 />

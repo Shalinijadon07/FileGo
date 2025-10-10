@@ -9,7 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function DownloadModal({ isOpen, onClose, onDownload, isLoading }) {
+export default function DownloadModal({
+  isOpen,
+  onClose,
+  onDownload,
+  isLoading,
+}) {
   const [password, setPassword] = useState("");
 
   const handleDownload = () => {
@@ -34,6 +39,7 @@ export default function DownloadModal({ isOpen, onClose, onDownload, isLoading }
           <div>
             <Label htmlFor="password">Password</Label>
             <Input
+              autoFocus
               id="password"
               type="password"
               placeholder="Enter password"

@@ -175,3 +175,11 @@
 .hover\:text-danger:hover {
   color: var(--danger);
 }
+
+.card-transition {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.card-transition:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(16,24,40,0.08);
+}
