@@ -91,7 +91,6 @@ const get_user = wrapAsync(async (req, res) => {
 });
 
 const google_auth = async (req, res) => {
-  console.log({ req });
   try {
     const { credential } = req.body;
     const ticket = await client.verifyIdToken({

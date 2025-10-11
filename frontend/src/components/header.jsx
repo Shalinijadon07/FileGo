@@ -7,7 +7,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/hooks/use-auth";
-import { Share2, UserCircle, ChevronDown, LogOut } from "lucide-react";
+import { Share2, ChevronDown, LogOut } from "lucide-react";
+import { Avatar } from "./ui/avatar";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -33,14 +34,20 @@ export default function Header() {
                     variant="ghost"
                     className="flex items-center space-x-2"
                   >
-                    {user?.profileImageUrl ? (
+                    {user?.profilePic ? (
                       <img
-                        src={user.profileImageUrl}
+                        src={user.profilePic}
                         alt="Profile"
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     ) : (
-                      <UserCircle className="w-8 h-8 text-gray-600" />
+                      <Avatar
+                        size="sm"
+                        className="bg-gray-200 flex items-center justify-center font-semibold text-gray-700 uppercase"
+                      >
+                        {user?.name?.[0] || user?.email?.[0] || "U"}
+                      </Avatar>
+                      // <UserCircle className="w-8 h-8 text-gray-600" />
                     )}
                     <span className="font-medium">
                       {user?.name || user?.email || "User"}

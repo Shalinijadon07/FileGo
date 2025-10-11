@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { apiRequest } from "@/lib/api";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export default function StatsOverview() {
   const [stats, setStats] = useState(null);

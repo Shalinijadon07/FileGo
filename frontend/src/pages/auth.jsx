@@ -17,6 +17,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import useAuth from "@/hooks/use-auth";
 import { useLocation } from "wouter";
+import toast from "react-hot-toast";
 
 export default function AuthPage() {
   const [tab, setTab] = useState("signin");
@@ -33,19 +34,17 @@ export default function AuthPage() {
 
   const handleGoogleLogin = async (credentialResponse) => {
     try {
-      console.log({ credentialResponse });
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`,
         { credential: credentialResponse.credential },
         { withCredentials: true }
       );
-
-      console.log(res);
-
       setUser(res.data.user);
       navigate("/dashboard");
     } catch (err) {
-      console.error("❌ Google login failed:", err);
+      toast.error(
+        err.response?.data?.error || "Google login failed. Please try again."
+      );
     }
   };
 
