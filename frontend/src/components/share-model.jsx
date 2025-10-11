@@ -34,7 +34,7 @@ export default function ShareModal({ isOpen, onClose, uploadedFile }) {
       `File shared: ${uploadedFile.file.name}`
     );
     const body = encodeURIComponent(
-      `I've shared a file with you using FileShare.\n\nFile: ${
+      `I've shared a file with you using FileGo.\n\nFile: ${
         uploadedFile.file.name
       }\nSize: ${formatFileSize(uploadedFile.file.size)}\n\nDownload link: ${
         uploadedFile.shareUrl

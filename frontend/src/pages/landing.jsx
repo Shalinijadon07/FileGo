@@ -14,7 +14,7 @@ export default function Landing() {
                 <i className="fas fa-share-alt text-white text-xs sm:text-sm"></i>
               </div>
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">
-                FileShare
+                FileGo
               </h1>
             </div>
 
@@ -101,8 +101,8 @@ export default function Landing() {
               Ready to start sharing?
             </h3>
             <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Join thousands of professionals who trust FileShare for their
-              secure file sharing needs. Sign up now and get started instantly.
+              Join thousands of professionals who trust FileGo for their secure
+              file sharing needs. Sign up now and get started instantly.
             </p>
             <Button
               onClick={() => setLocation("/auth")}
@@ -123,7 +123,7 @@ export default function Landing() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <i className="fas fa-share-alt text-white text-sm"></i>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">FileShare</h3>
+                <h3 className="text-xl font-bold text-gray-900">FileGo</h3>
               </div>
               <p className="text-gray-600 mb-4">
                 Secure, fast, and reliable file sharing for everyone. Share
@@ -170,7 +170,7 @@ export default function Landing() {
           </div>
 
           <div className="border-t border-gray-200 pt-6 sm:pt-8 mt-6 sm:mt-8 text-center text-gray-600 text-sm">
-            <p>&copy; 2024 FileShare. All rights reserved.</p>
+            <p>&copy; 2024 FileGo. All rights reserved.</p>
           </div>
         </div>
       </footer>
