@@ -26,6 +26,16 @@ app.use("/api/", require("./routes/user.File.Router"));
 app.use(errorHandler);
 
 connectDB();
+
+app.route("/").get((req, res) => res.status(200).json("Server is running"));
+app.route("/check/db").get((req, res) => {
+  if (mongoose.connection.readyState === 1) {
+    res.status(200).json("Connected to MongoDB");
+  } else {
+    res.status(500).json("Not connected to MongoDB");
+  }
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server running on port 3000");
 });
