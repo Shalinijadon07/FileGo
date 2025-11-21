@@ -3,11 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { apiRequest } from "@/lib/api";
 import toast from "react-hot-toast";
+import { Copy, QrCode } from "lucide-react";
+import { QRCodeModal } from "./qr-code-modal";
 
 export default function FileList() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [deleting, setDeleting] = useState(null); // track delete in progress
+  const [deleting, setDeleting] = useState(null);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [qrUrl, setQrUrl] = useState("");
+  const [qrShortCode, setQrShortCode] = useState("");
 
   // Fetch files with useEffect
   useEffect(() => {
@@ -60,7 +65,7 @@ export default function FileList() {
     });
   };
 
-  // Helpers
+  // Helpers̥
   const formatFileSize = (bytes) => {
     if (bytes === 0) return "0 B";
     const k = 1024;
@@ -174,88 +179,115 @@ export default function FileList() {
     );
   }
 
+  const showQrCode = (file) => {
+    const link = `${import.meta.env.VITE_FRONTEND_URL}/download/${file.id}`;
+
+    setQrUrl(link);
+    setQrShortCode(file.id);
+    setIsQrModalOpen(true);
+  };
+
   return (
-    <section className="mb-12">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-900">Recent Uploads</h3>
-      </div>
-      <Card>
-        <CardContent className="p-0">
-          {files.map((file) => {
-            const expiryStatus = getExpiryStatus(file.expiresAt);
-            return (
-              <div
-                key={file.id}
-                className="border-b border-gray-200 last:border-b-0 p-4 sm:p-6 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  {/* File Info */}
-                  <div className="flex items-center space-x-3 sm:space-x-4">
-                    <div
-                      className={`w-10 h-10 sm:w-12 sm:h-12 ${getFileIconBg(
-                        file.mimeType
-                      )} rounded-lg flex items-center justify-center flex-shrink-0`}
-                    >
-                      <i
-                        className={`${getFileIcon(
+    <>
+      <section className="mb-12">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-bold text-gray-900">Recent Uploads</h3>
+        </div>
+        <Card>
+          <CardContent className="p-0">
+            {files.map((file) => {
+              const expiryStatus = getExpiryStatus(file.expiresAt);
+              return (
+                <div
+                  key={file.id}
+                  className="border-b border-gray-200 last:border-b-0 p-4 sm:p-6 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    {/* File Info */}
+                    <div className="flex items-center space-x-3 sm:space-x-4">
+                      <div
+                        className={`w-10 h-10 sm:w-12 sm:h-12 ${getFileIconBg(
                           file.mimeType
-                        )} text-lg sm:text-xl`}
-                      ></i>
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-medium sm:font-semibold text-gray-900 truncate max-w-[150px] sm:max-w-[250px]">
-                        {file.name}
-                      </h4>
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-gray-500">
-                        <span>{formatFileSize(file.size)}</span>
-                        <span>{getTimeAgo(file.uploadedAt)}</span>
-                        <span className="flex items-center">
-                          <i className="fas fa-download mr-1"></i>
-                          {file.downloadCount}
-                        </span>
-                        {file.hasPassword && (
+                        )} rounded-lg flex items-center justify-center flex-shrink-0`}
+                      >
+                        <i
+                          className={`${getFileIcon(
+                            file.mimeType
+                          )} text-lg sm:text-xl`}
+                        ></i>
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-medium sm:font-semibold text-gray-900 truncate max-w-[150px] sm:max-w-[250px]">
+                          {file.name}
+                        </h4>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-gray-500">
+                          <span>{formatFileSize(file.size)}</span>
+                          <span>{getTimeAgo(file.uploadedAt)}</span>
                           <span className="flex items-center">
-                            <i className="fas fa-lock mr-1"></i>
-                            Protected
+                            <i className="fas fa-download mr-1"></i>
+                            {file.downloadCount}
                           </span>
-                        )}
+                          {file.hasPassword && (
+                            <span className="flex items-center">
+                              <i className="fas fa-lock mr-1"></i>
+                              Protected
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions + Expiry */}
+                    <div className="flex items-center justify-between sm:justify-end gap-3">
+                      <span
+                        className={`px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium rounded-full ${expiryStatus.color}`}
+                      >
+                        {expiryStatus.text}
+                      </span>
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyLink(file.id)}
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                        >
+                          <i className="fas fa-link text-sm sm:text-base"></i>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => showQrCode(file)}
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                        >
+                          <QrCode className="text-sm sm:text-base" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteFile(file.id)}
+                          disabled={deleting === file.id}
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-danger hover:bg-red-50"
+                        >
+                          <i className="fas fa-trash text-sm sm:text-base"></i>
+                        </Button>
                       </div>
                     </div>
                   </div>
-
-                  {/* Actions + Expiry */}
-                  <div className="flex items-center justify-between sm:justify-end gap-3">
-                    <span
-                      className={`px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium rounded-full ${expiryStatus.color}`}
-                    >
-                      {expiryStatus.text}
-                    </span>
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyLink(file.id)}
-                        className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-                      >
-                        <i className="fas fa-link text-sm sm:text-base"></i>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteFile(file.id)}
-                        disabled={deleting === file.id}
-                        className="p-1.5 sm:p-2 text-gray-400 hover:text-danger hover:bg-red-50"
-                      >
-                        <i className="fas fa-trash text-sm sm:text-base"></i>
-                      </Button>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
-    </section>
+              );
+            })}
+          </CardContent>
+        </Card>
+      </section>
+
+      {
+        <QRCodeModal
+          isOpen={isQrModalOpen}
+          onOpenChange={setIsQrModalOpen}
+          url={qrUrl}
+          shortCode={qrShortCode}
+        />
+      }
+    </>
   );
 }
