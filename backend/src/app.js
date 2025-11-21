@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDB = require("./config/connect");
 const { errorHandler } = require("./utils/errorHandler");
+const { default: mongoose } = require("mongoose");
 
 require("dotenv").config();
 
